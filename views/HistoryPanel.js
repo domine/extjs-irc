@@ -34,7 +34,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
     
     Ext.ux.IRC.HistoryPanel.superclass.initComponent.apply(this, arguments);
     
-    ExtMVC.OS.getOS().on('channel-changed', this.setCurrentChannel, this);
+    // ExtMVC.OS.getOS().on('channel-changed', this.setCurrentChannel, this);
     
     //Attach click handler to open links in text
     this.on('render', function() {

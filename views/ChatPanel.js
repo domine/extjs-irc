@@ -37,7 +37,7 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
     
     Ext.ux.IRC.ChatPanel.superclass.initComponent.apply(this, arguments);
     
-    ExtMVC.OS.getOS().on('launch', this.setupTextarea, this);
+    this.on('afterlayout', this.setupTextarea, this);
     
     this.addEvents(
       /**
@@ -64,12 +64,11 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
   sentMessageHistoryIndex: -1,
   
   /**
-   * Sets up the textarea input behaviour.  Run this on OS launch
+   * Sets up the textarea input behaviour.  Run this after render
    */
   setupTextarea: function() {
     this.msgInput = Ext.get(this.sendMessageInputId);
     
-    this.msgInput.focus();
     this.msgInput.dom.onkeydown = this.handleKeyPress.createDelegate(this);
   },
   
