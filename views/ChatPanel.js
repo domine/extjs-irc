@@ -1,14 +1,14 @@
 /**
- * @class IrcBackend.views.index.ChatPanel
+ * @class Ext.ux.IRC.ChatPanel
  * @extends Ext.Panel
  * Displays the current chat and a send message form
  */
-IrcBackend.views.index.ChatPanel = Ext.extend(Ext.Panel, {
+Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
   
   sendMessageInputId: 'irc-message-to-send',
 
   initComponent: function() {
-    this.historyPanel = new IrcBackend.views.index.HistoryPanel({
+    this.historyPanel = new Ext.ux.IRC.HistoryPanel({
       region:     'center',
       autoScroll: true
     });
@@ -35,7 +35,7 @@ IrcBackend.views.index.ChatPanel = Ext.extend(Ext.Panel, {
       items:  [this.historyPanel, this.sendMessagePanel]
     });
     
-    IrcBackend.views.index.ChatPanel.superclass.initComponent.apply(this, arguments);
+    Ext.ux.IRC.ChatPanel.superclass.initComponent.apply(this, arguments);
     
     ExtMVC.OS.getOS().on('launch', this.setupTextarea, this);
     
@@ -141,4 +141,4 @@ IrcBackend.views.index.ChatPanel = Ext.extend(Ext.Panel, {
   }
 });
 
-Ext.reg('chat_panel', IrcBackend.views.index.ChatPanel);
+Ext.reg('chat_panel', Ext.ux.IRC.ChatPanel);

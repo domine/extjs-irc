@@ -1,9 +1,9 @@
 /**
- * @class IrcBackend.views.index.HistoryPanel
+ * @class Ext.ux.IRC.HistoryPanel
  * @extends Ext.Component
  * Displays a chat history
  */
-IrcBackend.views.index.HistoryPanel = Ext.extend(Ext.Panel, {
+Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
   
   ulId: 'irc-chat-history-messages',
   
@@ -32,7 +32,7 @@ IrcBackend.views.index.HistoryPanel = Ext.extend(Ext.Panel, {
       currentChannel: null
     });
     
-    IrcBackend.views.index.HistoryPanel.superclass.initComponent.apply(this, arguments);
+    Ext.ux.IRC.HistoryPanel.superclass.initComponent.apply(this, arguments);
     
     ExtMVC.OS.getOS().on('channel-changed', this.setCurrentChannel, this);
     
@@ -101,4 +101,4 @@ IrcBackend.views.index.HistoryPanel = Ext.extend(Ext.Panel, {
   
 });
 
-Ext.reg('history_panel', IrcBackend.views.index.HistoryPanel);
+Ext.reg('history_panel', Ext.ux.IRC.HistoryPanel);

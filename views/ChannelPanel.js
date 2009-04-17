@@ -1,9 +1,9 @@
 /**
- * @class IrcBackend.views.index.ChannelPanel
+ * @class Ext.ux.IRC.ChannelPanel
  * @extends Ext.Component
  * Represents the channels and their members managed by an Ext.ux.IRC.Manager
  */
-IrcBackend.views.index.ChannelPanel = Ext.extend(Ext.Panel, {
+Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
   
   /**
    * @property baseCls
@@ -61,13 +61,14 @@ IrcBackend.views.index.ChannelPanel = Ext.extend(Ext.Panel, {
    * message the user could have read in each channel based on whether the channel is active or not
    */
   lastSeenMessageId: {},
- 
+
+ 
   initComponent: function() {
     Ext.applyIf(this, {
       html: {tag: 'ul', cls: this.channelsUlCls}
     });
     
-    IrcBackend.views.index.ChannelPanel.superclass.initComponent.apply(this, arguments);
+    Ext.ux.IRC.ChannelPanel.superclass.initComponent.apply(this, arguments);
     
     this.addEvents(
       /**
@@ -206,4 +207,4 @@ IrcBackend.views.index.ChannelPanel = Ext.extend(Ext.Panel, {
   }
 });
 
-Ext.reg('channel-panel', IrcBackend.views.index.ChannelPanel);
+Ext.reg('channel-panel', Ext.ux.IRC.ChannelPanel);
