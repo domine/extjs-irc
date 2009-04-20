@@ -2,13 +2,15 @@ Ext = Ext || {ux: {}};
 
 Screw.Unit(function() {
   describe("The IrcMessageDecoder", function() {
-    var d = Ext.ux.IRC.MessageDecoder;
+    var d          = Ext.ux.IRC.MessageDecoder,
+        serverName = 'my.irc.server.com';
     
-    var motdStart  = ':serverus.webserverdns.com 375 nickname :- serverus.webserverdns.com Message of the Day -',
-        motd       = ':serverus.webserverdns.com 372 nickname :- This is the short MOTD. To view the complete MOTD type /motd',
-        motdEnd    = ":serverus.webserverdns.com 376 nickname :End of /MOTD command.",
-        namReply   = ':serverus.webserverdns.com 353 nickname = #rarrar :rarrarrar edspencer NickP',
-        endOfNames = ':serverus.webserverdns.com 366 nickname #rarrar :End of /NAMES list.';
+    var motdStart   = ':' + serverName + ' 375 nickname :- ' + serverName + ' Message of the Day -',
+        motd        = ':' + serverName + ' 372 nickname :- This is the short MOTD. To view the complete MOTD type /motd',
+        motdEnd     = ':' + serverName + ' 376 nickname :End of /MOTD command.',
+        namReply    = ':' + serverName + ' 353 nickname = #rarrar :rarrarrar edspencer NickP',
+        endOfNames  = ':' + serverName + ' 366 nickname #rarrar :End of /NAMES list.',
+        topicChange = ':' + serverName + ' 332 nickname #myChannel :You did it Saul - you brought them back';
         
     
     it("should decode beginning of MOTD commands", function() {
@@ -16,9 +18,9 @@ Screw.Unit(function() {
       
       expect(o.number).to(equal, 375);
       expect(o.name).to(equal, "RPL_MOTDSTART");
-      expect(o.server).to(equal, "serverus.webserverdns.com");
-      expect(o.message).to(equal, "- serverus.webserverdns.com Message of the Day -");
-      expect(o.params).to(equal, "nickname :- serverus.webserverdns.com Message of the Day -");
+      expect(o.server).to(equal, serverName);
+      expect(o.message).to(equal, "- my.irc.server.com Message of the Day -");
+      expect(o.params).to(equal, "nickname :- my.irc.server.com Message of the Day -");
     });
     
     it("should decode MOTD commands", function() {
@@ -26,7 +28,7 @@ Screw.Unit(function() {
       
       expect(o.number).to(equal, 372);
       expect(o.name).to(equal, "RPL_MOTD");
-      expect(o.server).to(equal, "serverus.webserverdns.com");
+      expect(o.server).to(equal, serverName);
       expect(o.message).to(equal, "- This is the short MOTD. To view the complete MOTD type /motd");
       expect(o.params).to(equal, "nickname :- This is the short MOTD. To view the complete MOTD type /motd");
     });
@@ -36,9 +38,19 @@ Screw.Unit(function() {
       
       expect(o.number).to(equal, 376);
       expect(o.name).to(equal, "RPL_ENDOFMOTD");
-      expect(o.server).to(equal, "serverus.webserverdns.com");
+      expect(o.server).to(equal, serverName);
       expect(o.message).to(equal, "End of /MOTD command.");
       expect(o.params).to(equal, "nickname :End of /MOTD command.");
+    });
+    
+    it("should decode topic commands", function() {
+      var o = d.decode(topicChange);
+      
+      expect(o.number).to(equal, 332);
+      expect(o.name).to(equal, "RPL_TOPIC");
+      expect(o.server).to(equal, serverName);
+      expect(o.message).to(equal, "You did it Saul - you brought them back");
+      expect(o.params).to(equal, 'nickname #myChannel :You did it Saul - you brought them back');
     });
   });
 });

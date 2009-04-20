@@ -146,6 +146,20 @@ Screw.Unit(function() {
         });
       });
       
+      describe("A Topic message", function() {
+        var topicMsg = ":my.irc.server.com 332 client2 #myChannel :You did it Saul - you brought them back";
+        
+        it("should fire a topic-changed event with the correct channel and topic", function() {
+          var channel = '', topic = '';
+          
+          irc.on('topic-changed', function(c, t) {channel = c; topic = t;}, this);
+          irc.onLineReceived(topicMsg);
+          
+          expect(channel).to(equal, '#myChannel');
+          expect(topic).to(equal, "You did it Saul - you brought them back");
+        });
+      });
+      
       describe("A ping message", function() {
         var pingReceived = false, pongSent = false, pongMessage = '';
       

@@ -35,8 +35,8 @@ Screw.Unit(function() {
       var chan1, chan2;
       before(function() {
         //add a couple of fake channels
-        chan1 = new Ext.ux.IRC.Channel('#channel1', man);
-        chan2 = new Ext.ux.IRC.Channel('#channel2', man);
+        chan1 = new Ext.ux.IRC.Channel('#channel1', man.proxy);
+        chan2 = new Ext.ux.IRC.Channel('#channel2', man.proxy);
         man.channels.add(chan1); man.channels.add(chan2);
       });
       
@@ -86,6 +86,8 @@ Screw.Unit(function() {
           expect(chan1.members.length).to(equal, 0);
           
           man.proxy.fireEvent('name-list', chan1.name, "edspencer NickP rarrar");
+          console.log(chan1);
+          console.log(chan1.members);
           expect(chan1.members.length).to(equal, 3);
         });
         

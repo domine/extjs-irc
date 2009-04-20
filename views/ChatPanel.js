@@ -32,7 +32,7 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
     });
 
     Ext.applyIf(this, {
-      title:  'Chatting with Yuri Gagarin',
+      title:  'Connecting...',
       cls:    'irc-chat',
       layout: 'border',
       items:  [this.historyPanel, this.sendMessagePanel]
