@@ -85,7 +85,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
       ]
     });
     
-    newLi.scrollIntoView(this.el);
+//    newLi.scrollIntoView(this.el);
     this.fireEvent('historyUpdated', this);
   },
   
