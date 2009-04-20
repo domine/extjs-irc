@@ -15,8 +15,8 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
     
     this.sendMessagePanel = new Ext.Panel({
       region:    'south',
-      height:    22,
-      minHeight: 22,
+      height:    50,
+      minHeight: 50,
       split:     true,
       // cls:      'irc-chat-message',
       
