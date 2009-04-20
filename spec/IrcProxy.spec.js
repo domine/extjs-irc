@@ -118,7 +118,10 @@ Screw.Unit(function() {
       });
       
       describe("a PRIVMSG", function() {
-        var privMsg = ":edspencer!edspencer@leakster-4AF24986.cable.ubr01.dals.blueyonder.co.uk PRIVMSG #rarrar :this is a test";
+        var privMsg     = ":edspencer!edspencer@leakster-4AF24986.cable.ubr01.dals.blueyonder.co.uk PRIVMSG #rarrar :this is a test";
+        
+        //simulates a message sent straight to our user, who in this case is funkybob
+        var userPrivMsg = ":edspencer!edspencer@leakster-4AF24986.cable.ubr01.dals.blueyonder.co.uk PRIVMSG funkybob :this is a test";
         
         it("should fire a privmsg-received event with the correct channel and message", function() {
           var channel = '', nickname = '', message = '';
@@ -127,6 +130,17 @@ Screw.Unit(function() {
           irc.onLineReceived(privMsg);
           
           expect(channel).to(equal, "#rarrar");
+          expect(nickname).to(equal, "edspencer");
+          expect(message).to(equal, "this is a test");
+        });
+        
+        it("should correctly parse messages sent straight to a user (not via a channel)", function() {
+          var channel = '', nickname = '', message = '';
+          
+          irc.on('privmsg-received', function(c, n, m) {channel = c; nickname = n; message = m;}, this);
+          irc.onLineReceived(userPrivMsg);
+          
+          expect(channel).to(equal, "funkybob");
           expect(nickname).to(equal, "edspencer");
           expect(message).to(equal, "this is a test");
         });
