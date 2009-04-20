@@ -86,8 +86,6 @@ Screw.Unit(function() {
           expect(chan1.members.length).to(equal, 0);
           
           man.proxy.fireEvent('name-list', chan1.name, "edspencer NickP rarrar");
-          console.log(chan1);
-          console.log(chan1.members);
           expect(chan1.members.length).to(equal, 3);
         });
         
