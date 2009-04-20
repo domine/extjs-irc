@@ -18,13 +18,16 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
       height:    22,
       minHeight: 22,
       split:     true,
-      cls:      'irc-chat-message',
+      // cls:      'irc-chat-message',
       
       html: {
-        tag:      'textarea',
-        style:    'width: 100%; height: 100%;',
-        id:       this.sendMessageInputId,
-        tabindex: 1
+        cls: 'irc-chat-message',
+        children: [{
+          tag:      'textarea',
+          style:    'width: 100%; height: 100%;',
+          id:       this.sendMessageInputId,
+          tabindex: 1   
+        }]
       }
     });
 
