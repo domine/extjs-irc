@@ -6,6 +6,8 @@
 Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
   
   sendMessageInputId: 'irc-message-to-send',
+  
+  sendMessageSubmitId: 'irc-message-send-button',
 
   initComponent: function() {
     this.historyPanel = new Ext.ux.IRC.HistoryPanel({
@@ -18,16 +20,25 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
       height:    50,
       minHeight: 50,
       split:     true,
-      // cls:      'irc-chat-message',
       
       html: {
         cls: 'irc-chat-message',
-        children: [{
-          tag:      'textarea',
-          style:    'width: 100%; height: 100%;',
-          id:       this.sendMessageInputId,
-          tabindex: 1   
-        }]
+        children: [
+          {
+            tag:      'input',
+            type:     'submit',
+            value:    'Send',
+            style:    'width: 20%; float: right;',
+            id:       this.sendMessageSubmitId,
+            tabindex: 2
+          },
+          {
+            tag:      'textarea',
+            style:    'width: 75%; height: 100%;',
+            id:       this.sendMessageInputId,
+            tabindex: 1   
+          }
+        ]
       }
     });
 
@@ -41,6 +52,7 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
     Ext.ux.IRC.ChatPanel.superclass.initComponent.apply(this, arguments);
     
     this.on('afterlayout', this.setupTextarea, this);
+    this.on('afterlayout', this.setupSendButton, this);
     
     this.addEvents(
       /**
@@ -73,6 +85,15 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
     this.msgInput = Ext.get(this.sendMessageInputId);
     
     this.msgInput.dom.onkeydown = this.handleKeyPress.createDelegate(this);
+  },
+  
+  /**
+   * Listens to clicks and keypresses on the send button
+   */
+  setupSendButton: function() {
+    var s = Ext.get(this.sendMessageSubmitId);
+    
+    s.on('click', this.sendMessage, this);
   },
   
   /**
