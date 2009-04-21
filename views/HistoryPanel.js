@@ -134,11 +134,16 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
       ]
     });
     
-    
-    //FIXME: For some reason scroll isn't working properly as of 3.0RC1 so this is hacked instead
-    Ext.get(this.ulId).parent().scrollTo('top', 900000);
-    
+    this.scrollToBottom(); 
     this.fireEvent('historyUpdated', this);
+  },
+  
+  /**
+   * Scrolls to the bottom of the chat UL
+   */
+  scrollToBottom: function() {
+    //FIXME: For some reason scroll isn't working properly as of 3.0RC1 so this is hacked instead
+    Ext.get(this.ulId).scrollTo('top', 900000);
   },
   
   addNickname: function(nickname) {
