@@ -13,6 +13,21 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
    * A regex to match urls in the text to allow them to be highlighted
    */
   urlRegex: new RegExp("(http:\/\/[www\.]*[a-zA-Z0-9\-\_]*\.[a-z]{2,3}[\.a-z]{3,4}[\-\/\?\=\+\.\_a-zA-Z0-9]*)", 'g'),
+  
+  /**
+   * @property channelRegex
+   * @type RegExp
+   * A regex to match channel names in the text to allow them to be highlighted
+   */
+  channelRegex: new RegExp("(#[A-Za-z0-9]*)"),
+  
+  /**
+   * @property autoOpenLinks
+   * @type Boolean
+   * If true, automatically attach an event listener to open a new window when a url is clicked in the history messages
+   * (defaults to true)
+   */
+  autoOpenLinks: true,
 
   initComponent: function() {
     Ext.applyIf(this, {
@@ -34,15 +49,36 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
     
     Ext.ux.IRC.HistoryPanel.superclass.initComponent.apply(this, arguments);
     
-    // ExtMVC.OS.getOS().on('channel-changed', this.setCurrentChannel, this);
+    this.addEvents(
+      /**
+       * @event channel-clicked
+       * Fired when a link to a channel name is clicked in the history panel
+       * @param {String} channelName The name of the channel that was clicked (e.g. '#extjs')
+       */
+      'channel-clicked',
+      
+      /**
+       * @event link-clicked
+       * Fired when a link to a website url is clicked in the history panel
+       * @param {String} url The url clicked
+       */
+      'link-clicked'
+    );
+    
+    if (this.autoOpenLinks) {
+      this.on('link-clicked', window.open, window);
+    };
     
     //Attach click handler to open links in text
     this.on('render', function() {
       this.el.on('click', function(e) {
-        var t = e.getTarget('span.link');
-        if (t) {
-          window.open(Ext.get(t).dom.innerHTML);
-        };
+        var t;
+        if (t  = e.getTarget('span.link')) {
+          this.fireEvent('link-clicked', Ext.get(t).dom.innerHTML);
+        }
+        else if (t = e.getTarget('span.channel')) {
+          this.fireEvent('channel-clicked', Ext.get(t).dom.innerHTML);
+        }
       }, this);
     }, this);
   },
@@ -70,11 +106,13 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
   
   addMessage: function(member, message) {
     message.created_at = message.created_at || new Date();
-    
     this.addNickname(member.nickname);
     
     //match urls
     var messageMarkup = message.text.replace(this.urlRegex, "<span class='link'>$1</span>");
+    
+    //match channels
+    messageMarkup = messageMarkup.replace(this.channelRegex, "<span class='channel'>$1</span>");
     
     var newLi = Ext.DomHelper.append(this.ulId, {
       tag: 'li', 
