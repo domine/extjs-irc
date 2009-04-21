@@ -80,7 +80,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
       tag: 'li', 
       children: [
         {tag: 'span', html: message.created_at.format("H:i"), cls: 'timestamp'},
-        {tag: 'span', html: member.nickname + ":", cls: 'nickname nickname-' + this.getNicknameIndex(member.nickname)},
+        {tag: 'span', html: member.displayName() + ":", cls: 'nickname nickname-' + this.getNicknameIndex(member.nickname)},
         messageMarkup
       ]
     });

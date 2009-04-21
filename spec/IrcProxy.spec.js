@@ -33,6 +33,13 @@ Screw.Unit(function() {
         expect(messageWasCancelled).to(equal, true);
       });
       
+      describe("when sending a WHOIS", function() {
+        it("format the message correctly", function() {
+          irc.whois('edspencer');
+          expect(messageSent).to(equal, "WHOIS edspencer");
+        });
+      });
+      
       describe("when JOINing a channel", function() {
         it("should send the correct JOIN message", function() {
           irc.join('#myChannel');
@@ -76,8 +83,8 @@ Screw.Unit(function() {
       describe("regarding channel JOINs", function() {
         var namReply   = ':test.host 353 nickname = #rarrar :rarrarrar edspencer NickP',
             endOfNames = ':test.host 366 nickname #rarrar :End of /NAMES list.',
-            memberJoin = 'eggspencer!eggspencer@82.35.66.18 JOIN :#rarrar',
-            memberLeft = 'eggspencer!eggspencer@82.35.66.18 PART :#rarrar',
+            memberJoin = 'edspencer!edspencer@82.35.66.18 JOIN :#rarrar',
+            memberLeft = 'edspencer!edspencer@82.35.66.18 PART :#rarrar',
             eventSent  = false, channelName = '', nameList = '', nickname = '';
             
         before(function() {
@@ -105,7 +112,7 @@ Screw.Unit(function() {
           irc.onLineReceived(memberJoin);
           
           expect(channelName).to(equal, '#rarrar');
-          expect(nickname).to(equal, 'eggspencer');
+          expect(nickname).to(equal, 'edspencer');
         });
         
         it("should fire a member-left-channel event when another member leaves the channel", function() {
@@ -113,7 +120,7 @@ Screw.Unit(function() {
           irc.onLineReceived(memberLeft);
           
           expect(channelName).to(equal, '#rarrar');
-          expect(nickname).to(equal, 'eggspencer');
+          expect(nickname).to(equal, 'edspencer');
         });
       });
       
@@ -157,6 +164,21 @@ Screw.Unit(function() {
           
           expect(channel).to(equal, '#myChannel');
           expect(topic).to(equal, "You did it Saul - you brought them back");
+        });
+      });
+      
+      describe("A WHOIS response", function() {
+        var hostName   = '82-35-66-18.cable.ubr01.dals.blueyonder.co.uk',
+            serverName = 'my.irc.server.com';
+        var whoisResponseMsg = ':' + serverName + ' 311 nickname edNickname edUsername ' + hostName + ' * :Ed Spencer';
+        
+        it("should fire a whois-response-received event", function() {
+          var fired = false;
+          
+          irc.on('whois-response-received', function(o) {fired = true;}, this);
+          irc.onLineReceived(whoisResponseMsg);
+          
+          expect(fired).to(equal, true);
         });
       });
       
