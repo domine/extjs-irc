@@ -28,7 +28,18 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
    * (defaults to true)
    */
   autoOpenLinks: true,
+  
+  /**
+   * @property numberOfNicknameClasses
+   * @type Number
+   * The number of nickname CSS classes to cycle through (e.g. 'nickname-1' up to 'nickname-x').  CSS classes can target
+   * each to provide different styling for each nickname
+   */
+  numberOfNicknameClasses: 3,
 
+  /**
+   * Initialise everything, add our events and listeners
+   */
   initComponent: function() {
     Ext.applyIf(this, {
       cls:       'irc-chat-history',
@@ -123,7 +134,10 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
       ]
     });
     
-//    newLi.scrollIntoView(this.el);
+    
+    //FIXME: For some reason scroll isn't working properly as of 3.0RC1 so this is hacked instead
+    Ext.get(this.ulId).parent().scrollTo('top', 900000);
+    
     this.fireEvent('historyUpdated', this);
   },
   
@@ -134,7 +148,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
   },
   
   getNicknameIndex: function(nickname) {
-    return this.nicknames.indexOf(nickname) % 10 + 1;
+    return this.nicknames.indexOf(nickname) % this.numberOfNicknameClasses + 1;
   }
   
 });
