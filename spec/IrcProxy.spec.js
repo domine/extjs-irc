@@ -45,11 +45,6 @@ Screw.Unit(function() {
           irc.join('#myChannel');
           expect(messageSent).to(equal, "JOIN #myChannel");
         });
-        
-        it("remove ensure a trailing hash is present", function() {
-          irc.join('myChannel');
-          expect(messageSent).to(equal, "JOIN #myChannel");
-        });
       });
       
       describe("when leaving a channel", function() {

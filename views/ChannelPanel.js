@@ -65,7 +65,14 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
  
   initComponent: function() {
     Ext.applyIf(this, {
-      html: {tag: 'ul', cls: this.channelsUlCls}
+      html: {tag: 'ul', cls: this.channelsUlCls},
+      
+      /**
+       * @property contextChannelName
+       * @type String
+       * The name of the most recently right-clicked channel - used when firing the leave-channel event
+       */
+      contextChannelName: ''
     });
     
     Ext.ux.IRC.ChannelPanel.superclass.initComponent.apply(this, arguments);
@@ -76,14 +83,36 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
        * Fires when a channel is clicked
        * @param {String} channelName The name of the channel that was clicked
        */
-      'channel-clicked'
+      'channel-clicked',
+      
+      /**
+       * @event leave-channel
+       * Fired when the user has indicated via the interface that they would like to leave a channel
+       * Does not actually cause the channel to be left, your app needs to do that
+       * @param {String} channelName The name of the channel the user would like to leave
+       */
+      'leave-channel'
     );
     
     ExtMVC.OS.getOS().on('channel-changed', this.setActiveChannel, this);
     
+    //set up the context menu
+    this.contextMenu = new Ext.menu.Menu({
+      items: [
+        {
+          text:  'Leave this channel',
+          scope: this,
+          handler: function() {
+            this.fireEvent('leave-channel', this.contextChannelName);
+          }
+        }
+      ]
+    });
+    
     //set up click listeners once everything has been rendered
     this.on('render', function() {
-      this.el.on('click', this.handleElementClick, this);
+      this.el.on('click',       this.handleElementClick, this);
+      this.el.on('contextmenu', this.handleContextMenu,  this);
     }, this);
     
     this.addRebuildListeners();
@@ -112,9 +141,37 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
    * @param {Ext.EventObject} event The click event object
    */
   handleElementClick: function(event) {
-    var channel = event.getTarget('li.' + this.channelLiCls);
+    var name = this.getChannelFromClick(event);
     
-    if (channel) this.fireEvent('channel-clicked', channel.id.split('-')[1]);
+    if (name) this.fireEvent('channel-clicked', name);
+  },
+  
+  /**
+   * Displays a context menu when a channel is right-clicked on
+   * @param {Ext.EventObject} event The right-click event that was fired
+   */
+  handleContextMenu: function(event) {
+    var name = this.getChannelFromClick(event);
+    
+    if (name) {
+      this.contextChannelName = name;
+      event.stopEvent();
+      this.contextMenu.showAt(event.getXY());
+    }
+  },
+  
+  /**
+   * Returns the name of the channel that was clicked on from a click event on the Element
+   * @param {Ext.EventObject} event The click event
+   * @return {String} The name of the channel, or null
+   */
+  getChannelFromClick: function(event) {
+    var channel = event.getTarget('li.' + this.channelLiCls);
+    if (channel) {
+      return "#" + channel.id.split('-')[1];
+    } else {
+      return null;
+    };
   },
   
   /**
