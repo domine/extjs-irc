@@ -251,7 +251,7 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
       //build an array of member elements to add to this channel
       var memberEls = [];
       channel.members.each(function(member) {
-        memberEls.push({tag: 'li', html: member.nickname});
+        memberEls.push({tag: 'li', html: member.displayName()});
       }, this);
       
       //add the members <ul>
