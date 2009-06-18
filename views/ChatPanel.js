@@ -4,12 +4,28 @@
  * Displays the current chat and a send message form
  */
 Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
-  
-  sendMessageInputId: 'irc-message-to-send',
-  
-  sendMessageSubmitId: 'irc-message-send-button',
 
   initComponent: function() {
+    Ext.apply(this, {
+      sendMessageInputId : 'irc-message-to-send-' + new Date().format('is'),
+
+      sendMessageSubmitId: 'irc-message-send-button-' + new Date().format('is'),
+      
+      /**
+       * @property sentMessages
+       * @type Array
+       * Array of messages sent so far this session, with newest messages first
+       */
+      sentMessages: [],
+
+      /**
+       * @property sentMessageHistoryIndex
+       * @type Number
+       * The index of the sentMessages array currently being shown in the textarea
+       */
+      sentMessageHistoryIndex: -1
+    });
+    
     this.historyPanel = new Ext.ux.IRC.HistoryPanel({
       region:     'center',
       autoScroll: true
@@ -63,20 +79,6 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
       'send-message'
     );
   },
-  
-  /**
-   * @property sentMessages
-   * @type Array
-   * Array of messages sent so far this session, with newest messages first
-   */
-  sentMessages: [],
-  
-  /**
-   * @property sentMessageHistoryIndex
-   * @type Number
-   * The index of the sentMessages array currently being shown in the textarea
-   */
-  sentMessageHistoryIndex: -1,
   
   /**
    * Sets up the textarea input behaviour.  Run this after render

@@ -171,7 +171,7 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
       return "#" + channel.id.split('-')[1];
     } else {
       return null;
-    };
+    }
   },
   
   /**
@@ -219,8 +219,12 @@ Ext.ux.IRC.ChannelPanel = Ext.extend(Ext.Panel, {
    * Builds the channel and member listings based this.manager.  Removes any existing elements
    */
   buildElements: function() {
+    console.log('building');
+    console.log(this);
+    console.log(this.el);
+    
     //clear out existing elements
-    var u = this.getEl().child('ul.' + this.channelsUlCls);
+    var u = this.el.child('ul.' + this.channelsUlCls);
     u.dom.innerHTML = '';
     
     this.manager.channels.each(function(channel) {

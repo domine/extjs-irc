@@ -5,8 +5,6 @@
  */
 Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
   
-  ulId: 'irc-chat-history-messages',
-  
   /**
    * @property urlRegex
    * @type RegExp
@@ -36,6 +34,16 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
    * each to provide different styling for each nickname
    */
   numberOfNicknameClasses: 3,
+  
+  constructor: function(config) {
+    config = config || {};
+    
+    Ext.applyIf(config, {
+      ulId: 'irc-chat-history-messages-' + new Date().format('is')
+    });
+    
+    Ext.ux.IRC.HistoryPanel.superclass.constructor.apply(this, arguments);
+  },
 
   /**
    * Initialise everything, add our events and listeners
@@ -100,7 +108,9 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
    */
   setCurrentChannel: function(channel) {
     //listen to any new messages on this channel, remove listener from previous channel
-    if (this.currentChannel) this.currentChannel.un('message-received', this.addMessage, this);
+    if (this.currentChannel != undefined) {
+      this.currentChannel.un('message-received', this.addMessage, this);
+    }
     
     this.currentChannel = channel;
     this.currentChannel.on('message-received', this.addMessage, this);
@@ -108,6 +118,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
     //remove existing history
     var ul = Ext.get(this.ulId);
     ul.dom.innerHTML = '';
+    this.nicknames = [];
     
     //add any messages we know about in this channel
     Ext.each(channel.messages, function(message) {
@@ -149,7 +160,7 @@ Ext.ux.IRC.HistoryPanel = Ext.extend(Ext.Panel, {
   addNickname: function(nickname) {
     if (this.nicknames.indexOf(nickname) == -1) {
       this.nicknames.push(nickname);
-    };
+    }
   },
   
   getNicknameIndex: function(nickname) {
