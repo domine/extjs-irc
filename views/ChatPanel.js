@@ -23,15 +23,18 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
        * @type Number
        * The index of the sentMessages array currently being shown in the textarea
        */
-      sentMessageHistoryIndex: -1
+      sentMessageHistoryIndex: -1,
+      
+      historyPanelConfig: {},
+      sendMessagePanelConfig: {}
     });
     
-    this.historyPanel = new Ext.ux.IRC.HistoryPanel({
+    Ext.applyIf(this.historyPanelConfig, {
       region:     'center',
       autoScroll: true
     });
     
-    this.sendMessagePanel = new Ext.Panel({
+    Ext.applyIf(this.sendMessagePanelConfig, {
       region:    'south',
       height:    50,
       minHeight: 50,
@@ -57,6 +60,20 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
         ]
       }
     });
+    
+    /**
+     * @property historyPanel
+     * @type Ext.ux.IRC.HistoryPanel
+     * The panel used to display chat history. Supply config options in historyPanelConfig
+     */
+    this.historyPanel = new Ext.ux.IRC.HistoryPanel(this.historyPanelConfig);
+    
+    /**
+     * @property sendMessagePanel
+     * @type Ext.Panel
+     * The panel used to allow the user to send a message. Supply config options in sendMessagePanelConfig
+     */
+    this.sendMessagePanel = new Ext.Panel(this.sendMessagePanelConfig);
 
     Ext.applyIf(this, {
       title:  'Connecting...',
