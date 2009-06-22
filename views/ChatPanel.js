@@ -4,8 +4,15 @@
  * Displays the current chat and a send message form
  */
 Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
-
-  initComponent: function() {
+  
+  constructor: function(config) {
+    config = config || {};
+    
+    Ext.applyIf(config, {
+      historyPanelConfig    : {},
+      sendMessagePanelConfig: {}
+    });
+    
     Ext.apply(this, {
       sendMessageInputId : 'irc-message-to-send-' + new Date().format('is'),
 
@@ -23,18 +30,15 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
        * @type Number
        * The index of the sentMessages array currently being shown in the textarea
        */
-      sentMessageHistoryIndex: -1,
-      
-      historyPanelConfig: {},
-      sendMessagePanelConfig: {}
+      sentMessageHistoryIndex: -1
     });
     
-    Ext.applyIf(this.historyPanelConfig, {
+    this.historyPanelConfig = Ext.applyIf(config.historyPanelConfig, {
       region:     'center',
       autoScroll: true
     });
     
-    Ext.applyIf(this.sendMessagePanelConfig, {
+    this.sendMessagePanelConfig = Ext.applyIf(config.sendMessagePanelConfig, {
       region:    'south',
       height:    50,
       minHeight: 50,
@@ -61,6 +65,10 @@ Ext.ux.IRC.ChatPanel = Ext.extend(Ext.Panel, {
       }
     });
     
+    Ext.ux.IRC.ChatPanel.superclass.constructor.apply(this, arguments);
+  },
+
+  initComponent: function() {
     /**
      * @property historyPanel
      * @type Ext.ux.IRC.HistoryPanel
